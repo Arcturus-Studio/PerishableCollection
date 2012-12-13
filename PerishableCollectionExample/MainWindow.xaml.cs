@@ -15,13 +15,16 @@ namespace SnipSnap {
         public MainWindow() {
             InitializeComponent();
 
-
-            // setup start/stop button
+            
             var gameLifeExchanger = new LifetimeExchanger();
-            SetupAndRunGame(
-                new Game(gameLifeExchanger.ActiveLifetime),
-                initial: true);
 
+            // show initial practice game
+            this.Loaded += (sender, arg) =>
+                SetupAndRunGame(
+                    new Game(gameLifeExchanger.ActiveLifetime),
+                    initial: true);
+
+            // setup start button
             ButtonStart.Click += (sender, arg) => {
                 MenuPanel.Visibility = Visibility.Collapsed;
                 SetupAndRunGame(

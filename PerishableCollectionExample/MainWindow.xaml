@@ -16,7 +16,7 @@
             <TextBlock x:Name="TimeLabel" Text="Time: 0.0s" HorizontalAlignment="Left"/>
         </Grid>
         <Canvas Grid.Row="2" x:Name="canvas" Background="White"/>
-        <StackPanel Grid.RowSpan="2"  x:Name="MenuPanel" Background="#A0FFFFFF"  HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Grid.RowSpan="2"  x:Name="MenuPanel" Background="#C0FFFFFF"  HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock x:Name="LabelTitle" Text="Welcome to SnipSnap" TextAlignment="Center" Foreground="Green" FontSize="30"/>
             <Button x:Name="ButtonStart" Content="Start" Width="100" Height="50"/>
             <StackPanel HorizontalAlignment="Center">
@@ -24,6 +24,7 @@
                 <TextBlock Text="- Cut links with the mouse pointer"/>
                 <TextBlock Text="- Nodes die when separated from their parent"/>
                 <TextBlock Text="- Cutting costs energy, deaths restore energy"/>
+                <TextBlock Text="- Last as long as you can"/>
             </StackPanel>
         </StackPanel>
     </Grid>
