@@ -14,22 +14,22 @@ namespace SnipSnap {
 
         public MainWindow() {
             InitializeComponent();
-            
+
+
             // setup start/stop button
-            Game curGame = null;
-            ButtonStartStop.Click += (sender, arg) => {
-                if (curGame == null) {
-                    curGame = new Game();
-                    SetupAndRunGame(curGame);
-                    ButtonStartStop.Content = "End";
-                } else {
-                    curGame.LifeSource.EndLifetime();
-                    curGame = null;
-                    ButtonStartStop.Content = "Start";
-                }
+            var gameLifeExchanger = new LifetimeExchanger();
+            SetupAndRunGame(
+                new Game(gameLifeExchanger.ActiveLifetime),
+                initial: true);
+
+            ButtonStart.Click += (sender, arg) => {
+                MenuPanel.Visibility = Visibility.Collapsed;
+                SetupAndRunGame(
+                    new Game(gameLifeExchanger.StartNextAndEndPreviousLifetime()),
+                    initial: false);
             };
         }
-        private void SetupAndRunGame(Game game) {
+        private void SetupAndRunGame(Game game, bool initial) {
             // controls added to this collection should be displayed on the canvas until they perish
             var controls = new PerishableCollection<UIElement>();
             controls.AsObservable().Subscribe(
@@ -79,7 +79,7 @@ namespace SnipSnap {
             SetupMouseCutter(game, controls);
 
             // text displays of game state should track that state
-            SetupEnergyAndTime(
+            if (!initial) SetupEnergyAndTime(
                 game,
                 energyLossForCutting: 2.5,
                 energyGainPerConnectorBroken: 1);
@@ -150,9 +150,20 @@ namespace SnipSnap {
         }
         private void SetupEnergyAndTime(Game game, double energyLossForCutting, double energyGainPerConnectorBroken) {
             var elapsed = TimeSpan.Zero;
+            var living = new LifetimeSource();
+
+            living.Lifetime.WhenDead(() => {
+                if (Best == elapsed) {
+                    LabelTitle.Text = "New High Score! Try Again?";
+                    LabelTitle.Foreground = new SolidColorBrush(Colors.Green);
+                } else {
+                    LabelTitle.Text = "Game Over! Try Again?";
+                    LabelTitle.Foreground = new SolidColorBrush(Colors.Red);
+                }
+                MenuPanel.Visibility = Visibility.Visible;
+            }, game.Life);
 
             // show energy status
-            var done = false;
             var gains = 0.0;
             var loses = 0.0;
             var energy = 50.0;
@@ -181,13 +192,14 @@ namespace SnipSnap {
                 BarEnergy.Width = ((energy - gains) / maxEnergy * w).Clamp(0, w);
 
                 // hit 0 energy? game over
-                done |= energy == 0;
+                if (energy == 0) living.EndLifetime();
             }, game.Life);
 
             // track energy changes due to connectors dying
             game.Connectors.AsObservable().Subscribe(e => e.Lifetime.WhenDead(() => {
                 // breaking connectors gain you some energy
-                if (!done) energy += energyGainPerConnectorBroken;
+                if (living.Lifetime.IsMortal) 
+                    energy += energyGainPerConnectorBroken;
                 gains += energyGainPerConnectorBroken;
 
                 // but making cuts costs energy
@@ -200,15 +212,18 @@ namespace SnipSnap {
             // track times
             game.LoopActions.Add(step => {
                 // advance time
-                if (!done) elapsed += step.TimeStep;
+                if (living.Lifetime.IsMortal) 
+                    elapsed += step.TimeStep;
                 Best = Best.Max(elapsed);
                 
-                // show time (red when dead)
-                TimeLabel.Background = new SolidColorBrush(done ? Colors.Pink : Colors.White);
+                // show time
                 TimeLabel.Text = String.Format("Time: {0:0.0}s", elapsed.TotalSeconds);
 
                 // show best time (green when making best time)
-                TimeBest.Background = new SolidColorBrush(Best == elapsed ? Colors.LightGreen : Colors.White);
+                TimeBest.Background = new SolidColorBrush(
+                    Best == elapsed 
+                    ? Color.FromArgb(128, 0, 255, 0) 
+                    : Colors.Transparent);
                 TimeBest.Text = String.Format("Best: {0:0.0}s", Best.TotalSeconds);
             }, game.Life);
         }

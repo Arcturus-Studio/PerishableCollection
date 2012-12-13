@@ -10,11 +10,12 @@ namespace SnipSnap {
         public readonly PerishableCollection<Ball> Balls = new PerishableCollection<Ball>();
         ///<summary>The active ball connectors in the game.</summary>
         public readonly PerishableCollection<Connector> Connectors = new PerishableCollection<Connector>();
-        ///<summary>The lifetime source of the game, that controls when the game is ended.</summary>
-        public readonly LifetimeSource LifeSource = new LifetimeSource();
         ///<summary>The lifetime of the game, that ends when the game should be stopped.</summary>
-        public Lifetime Life { get { return this.LifeSource.Lifetime; } }
+        public Lifetime Life { get; private set; }
         ///<summary>A common random number generator.</summary>
         public readonly Random Rng = new Random();
+        public Game(Lifetime lifetime) {
+            this.Life = lifetime;
+        }
     }
 }

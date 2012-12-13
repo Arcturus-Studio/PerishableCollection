@@ -4,19 +4,27 @@
         Title="Lifetime Example - SnipSnap" Height="350" Width="525">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="10"/>
+            <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Background="Gray">
-            <Button x:Name="ButtonStartStop" Content="Start" Width="100"/>
-            <TextBox x:Name="TimeLabel" Text="Time: 0.0s" Width="100"/>
-            <TextBox x:Name="TimeBest" Text="Best: 0.0s" Width="100"/>
-        </StackPanel>
-        <Rectangle Fill="LightGray" Grid.Row="1"/>
-        <Rectangle x:Name="BarLoses" Fill="Red" HorizontalAlignment="Left" Grid.Row="1"/>
-        <Rectangle x:Name="BarGains" Fill="Blue" HorizontalAlignment="Left" Grid.Row="1"/>
-        <Rectangle x:Name="BarEnergy" Fill="Green" HorizontalAlignment="Left" Grid.Row="1"/>
+        <Grid Grid.Row="0">
+            <Rectangle Fill="LightGray" Grid.Row="1"/>
+            <Rectangle x:Name="BarLoses" Fill="Red" HorizontalAlignment="Left"/>
+            <Rectangle x:Name="BarGains" Fill="Blue" HorizontalAlignment="Left"/>
+            <Rectangle x:Name="BarEnergy" Fill="Green" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="TimeBest" Text="Best: 0.0s" HorizontalAlignment="Right"/>
+            <TextBlock x:Name="TimeLabel" Text="Time: 0.0s" HorizontalAlignment="Left"/>
+        </Grid>
         <Canvas Grid.Row="2" x:Name="canvas" Background="White"/>
+        <StackPanel Grid.RowSpan="2"  x:Name="MenuPanel" Background="#A0FFFFFF"  HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="LabelTitle" Text="Welcome to SnipSnap" TextAlignment="Center" Foreground="Green" FontSize="30"/>
+            <Button x:Name="ButtonStart" Content="Start" Width="100" Height="50"/>
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="- Game ends when energy decays to nothing"/>
+                <TextBlock Text="- Cut links with the mouse pointer"/>
+                <TextBlock Text="- Nodes die when separated from their parent"/>
+                <TextBlock Text="- Cutting costs energy, deaths restore energy"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
