@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lifetime, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TwistedOak.Util.Lifetime.1.0.1\lib\portable-net4+win8\Lifetime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Reactive.Core">
       <HintPath>..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
@@ -66,10 +70,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lifetime\Lifetime.csproj">
-      <Project>{c5f0a258-0aa4-4644-ad4b-134811518025}</Project>
-      <Name>Lifetime</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PerishableCollection\PerishableCollection.csproj">
       <Project>{7541343d-44b8-49e3-8c2a-0f2618a3b11e}</Project>
       <Name>PerishableCollection</Name>

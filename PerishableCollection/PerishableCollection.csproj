@@ -39,6 +39,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Lifetime">
+      <HintPath>..\packages\TwistedOak.Util.Lifetime.1.0.1\lib\portable-net4+win8\Lifetime.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reactive.Core">
       <HintPath>..\packages\Rx-Core.2.0.21114\lib\Portable-Net45+WinRT45\System.Reactive.Core.dll</HintPath>
     </Reference>
@@ -51,12 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lifetime\Lifetime.csproj">
-      <Project>{c5f0a258-0aa4-4644-ad4b-134811518025}</Project>
-      <Name>Lifetime</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
