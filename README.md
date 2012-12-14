@@ -7,8 +7,8 @@ The main advantage of using lifetimes instead of a remove method is that obsevat
 
 You can filter and project a perishable collection's items, without losing the ability to determine when the item was removed. For example:
 
-// pair items to a unique id, automatically adding/removing them from a new collection
-var id = 0;
-IObservable<Perishable<T>> items = perishableCollection.AsObservable();
-IObservable<Perishable<Tuple<T, int>>> itemsWithIds = items.Select(e => Tuple.Create(e, Interlocked.Increment(ref id));
-PerishableCollection<Tuple<T, int>> perishableCollectionWithIds = IDed.ToPerishableCollection();
+    // pair items to a unique id, automatically adding/removing them from a new collection
+    var id = 0;
+    IObservable<Perishable<T>> items = perishableCollection.AsObservable();
+    IObservable<Perishable<Tuple<T, int>>> itemsWithIds = items.Select(e => Tuple.Create(e, Interlocked.Increment(ref id));
+    PerishableCollection<Tuple<T, int>> perishableCollectionWithIds = IDed.ToPerishableCollection();
