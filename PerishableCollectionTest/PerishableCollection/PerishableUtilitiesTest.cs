@@ -32,7 +32,7 @@ public class PerishableUtilitiesTest {
     public void PerishableObservableSelect() {
         new[] { new Perishable<int>(1, Lifetime.Immortal) }
             .ToObservable()
-            .Select(e => e + 1)
+            .LiftSelect(e => e + 1)
             .ToList()
             .ToTask()
             .AssertRanToCompletion()
@@ -42,7 +42,7 @@ public class PerishableUtilitiesTest {
     public void PerishableObservableWhere() {
         new[] { new Perishable<int>(1, Lifetime.Immortal), new Perishable<int>(2, Lifetime.Immortal) }
             .ToObservable()
-            .Where(e => e != 1)
+            .LiftWhere(e => e != 1)
             .ToList()
             .ToTask()
             .AssertRanToCompletion()
@@ -50,14 +50,14 @@ public class PerishableUtilitiesTest {
     }
     [TestMethod]
     public void PerishableEnumerableSelect() {
-        new[] { new Perishable<int>(1, Lifetime.Immortal) }.Select(e => e + 1).AssertSequenceEquals(new Perishable<int>(2, Lifetime.Immortal));
+        new[] { new Perishable<int>(1, Lifetime.Immortal) }.LiftSelect(e => e + 1).AssertSequenceEquals(new Perishable<int>(2, Lifetime.Immortal));
     }
     [TestMethod]
     public void PerishableEnumerableWhere() {
         new[] {
             new Perishable<int>(1, Lifetime.Immortal),
             new Perishable<int>(2, Lifetime.Immortal)
-        }.Where(e => e != 1).AssertSequenceEquals(new Perishable<int>(2, Lifetime.Immortal));
+        }.LiftWhere(e => e != 1).AssertSequenceEquals(new Perishable<int>(2, Lifetime.Immortal));
     }
     [TestMethod]
     public void ObserveNonPerishedCount() {
