@@ -61,7 +61,6 @@ namespace SnipSnap {
                                                          double deathFinalThicknessFactor,
                                                          Color cutBangColor,
                                                          TimeSpan cutBangDuration,
-                                                         double cutBangRotationsPerSecond,
                                                          double cutBangMaxRadius,
                                                          Color propagateBangColor,
                                                          TimeSpan propagateBangDuration,
@@ -95,8 +94,7 @@ namespace SnipSnap {
                             cutBangDuration,
                             (step, prop, elapsed) => {
                                 var c = 1 - (prop - 0.5).Abs()*2;
-                                cutLineControl.Reposition(
-                                    (p - d*c).To(p + d*c));
+                                cutLineControl.Reposition((p - d*c).To(p + d*c));
                                 cutLineControl.StrokeThickness = prop*cutBangMaxRadius/2;
                                 cutLineControl.Stroke = new SolidColorBrush(cutBangColor.LerpToTransparent(1 - c));
                             });

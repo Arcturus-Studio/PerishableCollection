@@ -75,7 +75,6 @@ namespace SnipSnap {
                 propagateBangMaxRadius: 10,
                 cutBangColor: Colors.Red,
                 cutBangDuration: 400.Milliseconds(),
-                cutBangRotationsPerSecond: 2,
                 cutBangMaxRadius: 15);
 
             // connectors that touch the cursor should die

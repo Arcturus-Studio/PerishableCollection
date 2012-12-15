@@ -83,6 +83,11 @@ namespace SnipSnap.Mathematics {
             return Enumerable.Range(0, count);
         } 
 
+        /// <summary>
+        /// Returns the point where a linear cut path intersects a line segment whose ends points are following linear paths.
+        /// Returns null if there is no such point.
+        /// Also returns the normalized 'direction' of the cut.
+        /// </summary>
         public static Tuple<Point, Vector> TryGetCut(this LineSegment cutPath, LineSegment endPath1, LineSegment endPath2) {
             var e = new[] {endPath1, endPath2}
                 .Select(line => new LineSegment(line.Start, line.Delta - cutPath.Delta))
@@ -91,21 +96,9 @@ namespace SnipSnap.Mathematics {
             if (!c.HasValue) return null;
             var p = cutPath.LerpAcross(c.Value.T);
             var v = cutPath.Delta - endPath1.Delta.LerpTo(endPath2.Delta, c.Value.S);
-            return Tuple.Create(p, v);
+            return Tuple.Create(p, v.Normal());
         }
 
-        /// <summary>
-        /// The approximated closest that a point comes to a line over time.
-        /// The approximation may be far too low, but not too high.
-        /// </summary>
-        public static double ApproximateMinDistanceFromPointToLineOverTime(this LineSegment targetTrajectory, LineSegment endPoint1Trajectory, LineSegment endPoint2Trajectory) {
-            var sweepOrigin = endPoint1Trajectory.Start;
-            var sweepLine = new LineSegment(endPoint2Trajectory.Start, endPoint2Trajectory.End - endPoint1Trajectory.Delta);
-            var targetLine = new LineSegment(targetTrajectory.Start, targetTrajectory.End - endPoint1Trajectory.Delta);
-
-            var triangle = new ConvexPolygon(new[] { sweepOrigin, sweepLine.Start, sweepLine.End });
-            return targetLine.DistanceTo(triangle);
-        }
         ///<summary>A color with a hue based on the given value, cycling around the color wheel with the given period.</summary>
         public static Color HueToApproximateColor(this double hue, double period) {
             var rgb = 3.Range().Select(i => 
