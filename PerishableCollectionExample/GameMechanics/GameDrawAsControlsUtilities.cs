@@ -84,24 +84,34 @@ namespace SnipSnap {
 
                     // show a bang if the connector is cut
                     e.Lifetime.WhenDead(() => {
-                        if (con.CutPoint == null) return;
-                        game.AnimateSpinningRectangleExplosion(
-                            controls,
-                            p => con.CutPoint.Value.ClosestPointOn(con.Line),
-                            cutBangColor,
+                        if (con.CutPoint == null || con.CutDir == null) return;
+                        var cutLineControl = new Line {
+                            Stroke = new SolidColorBrush(cutBangColor),
+                            StrokeThickness = thickness,
+                        };
+                        var p = con.CutPoint.Value;
+                        var d = con.CutDir.Value*cutBangMaxRadius;
+                        var life = game.AnimateWith(
                             cutBangDuration,
-                            cutBangRotationsPerSecond,
-                            cutBangMaxRadius);
+                            (step, prop, elapsed) => {
+                                var c = 1 - (prop - 0.5).Abs()*2;
+                                cutLineControl.Reposition(
+                                    (p - d*c).To(p + d*c));
+                                cutLineControl.StrokeThickness = prop*cutBangMaxRadius/2;
+                                cutLineControl.Stroke = new SolidColorBrush(cutBangColor.LerpToTransparent(1 - c));
+                            });
+                        controls.Add(cutLineControl, life);
                     });
 
                     // show a bang travelling along the connector when it dies
                     e.Lifetime.WhenDead(() =>
-                        game.AnimateSpinningRectangleExplosion(controls,
-                                                               p => (con.CutPoint == null ? con.Line.Start : con.CutPoint.Value.ClosestPointOn(con.Line)).To(e.Value.Line.End).LerpAcross(p),
-                                                               propagateBangColor,
-                                                               propagateBangDuration,
-                                                               propagateBangRotationsPerSecond,
-                                                               propagateBangMaxRadius));
+                        game.AnimateSpinningRectangleExplosion(
+                            controls,
+                            p => (con.CutPoint == null ? con.Line.Start : con.CutPoint.Value.ClosestPointOn(con.Line)).To(e.Value.Line.End).LerpAcross(p),
+                            propagateBangColor,
+                            propagateBangDuration,
+                            propagateBangRotationsPerSecond,
+                            propagateBangMaxRadius));
 
                     // expand and fade out the line control after the connector dies
                     var controlLife = e.Lifetime.WhenAfterLife(() => game.AnimateWith(
@@ -109,7 +119,7 @@ namespace SnipSnap {
                         (step, portion, dt) => {
                             lineControl.StrokeThickness = thickness * 1.LerpTo(deathFinalThicknessFactor, portion);
                             lineControl.Stroke = new SolidColorBrush(Colors.Black.LerpToTransparent(portion));
-                            lineControl.Reposition(e.Value.Line);
+                            //lineControl.Reposition(e.Value.Line);
                         }));
 
                     controls.Add(lineControl, controlLife);

@@ -129,4 +129,54 @@ public class MathUtilitiesTest {
         // midpoint closest
         new Point(3, -1).To(new Point(-1, 3)).DistanceTo(Tri0UxUy).AssertEquals(0.5*Math.Sqrt(2), Eps);
     }
+    [TestMethod]
+    public void LineDefinedByMovingEndPointsCrossesOrigin() {
+        // parallel
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, -1).Sweep(new Vector(0, 2)),
+            new Point(+1, -1).Sweep(new Vector(0, 2))
+        ).AssertEquals(new GeometryUtilities.IntersectionParameters { T = 0.5, S = 0.5 });
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, -1).Sweep(new Vector(2, 0)),
+            new Point(-1, +1).Sweep(new Vector(2, 0))
+        ).AssertEquals(new GeometryUtilities.IntersectionParameters { T = 0.5, S = 0.5 });
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, -1).Sweep(new Vector(0.5, 0)),
+            new Point(-1, +1).Sweep(new Vector(0.5, 0))
+        ).AssertEquals(null);
+
+        // fixed
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, 0).Sweep(new Vector(0, 0)),
+            new Point(+1, 0).Sweep(new Vector(0, 0))
+        ).AssertEquals(new GeometryUtilities.IntersectionParameters { T = 0, S = 0.5 });
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, -1).Sweep(new Vector(0, 0)),
+            new Point(+1, -1).Sweep(new Vector(0, 0))
+        ).AssertEquals(null);
+
+        // orthogonal
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, +10).Sweep(new Vector(0, -11)),
+            new Point(-1, -1).Sweep(new Vector(11, 0))
+        ).HasValue.AssertIsTrue();
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, +3).Sweep(new Vector(0, -4)),
+            new Point(-1, -1).Sweep(new Vector(4, 0))
+        ).AssertEquals(new GeometryUtilities.IntersectionParameters { T = 0.5, S = 0.5 });
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, +1).Sweep(new Vector(0, -2)),
+            new Point(-1, -1).Sweep(new Vector(2, 0))
+        ).AssertEquals(null);
+
+        // anchored
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, 0).Sweep(new Vector(0, 0)),
+            new Point(+1, -1).To(new Point(+1, +1))
+        ).AssertEquals(new GeometryUtilities.IntersectionParameters { T = 0.5, S = 0.5 });
+        GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(
+            new Point(-1, 0).Sweep(new Vector(0, 0)),
+            new Point(+1, -1).To(new Point(+1, -0.5))
+        ).AssertEquals(null);
+    }
 }

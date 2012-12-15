@@ -83,6 +83,17 @@ namespace SnipSnap.Mathematics {
             return Enumerable.Range(0, count);
         } 
 
+        public static Tuple<Point, Vector> TryGetCut(this LineSegment cutPath, LineSegment endPath1, LineSegment endPath2) {
+            var e = new[] {endPath1, endPath2}
+                .Select(line => new LineSegment(line.Start, line.Delta - cutPath.Delta))
+                .ToArray();
+            var c = GeometryUtilities.LineDefinedByMovingEndPointsCrossesOrigin(e[0], e[1], origin: cutPath.Start);
+            if (!c.HasValue) return null;
+            var p = cutPath.LerpAcross(c.Value.T);
+            var v = cutPath.Delta - endPath1.Delta.LerpTo(endPath2.Delta, c.Value.S);
+            return Tuple.Create(p, v);
+        }
+
         /// <summary>
         /// The approximated closest that a point comes to a line over time.
         /// The approximation may be far too low, but not too high.
@@ -118,6 +129,9 @@ namespace SnipSnap.Mathematics {
         public static double LerpTo(this double valueAt0, double valueAt1, double proportion) {
             return valueAt1 * proportion + valueAt0 * (1 - proportion);
         }
+        public static Vector LerpTo(this Vector valueAt0, Vector valueAt1, double proportion) {
+            return valueAt1 * proportion + valueAt0 * (1 - proportion);
+        }
         public static double LerpTo(this int valueAt0, double valueAt1, double proportion) {
             return ((double)valueAt0).LerpTo(valueAt1, proportion);
         }
@@ -142,6 +156,11 @@ namespace SnipSnap.Mathematics {
         }
         public static Point LerpAcross(this LineSegment line, double proportion) {
             return line.Start + line.Delta*proportion;
+        }
+        public static double LerpProjectOnto(this Point point, LineSegment line) {
+            var b = point - line.Start;
+            var d = line.Delta;
+            return (b*d)/d.LengthSquared;
         }
     }
 }

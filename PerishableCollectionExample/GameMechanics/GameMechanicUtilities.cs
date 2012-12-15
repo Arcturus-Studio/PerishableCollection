@@ -125,14 +125,16 @@ namespace SnipSnap {
                     var cutPath = new LineSegment(prev.Value, cur.Value);
 
                     // cut any connectors that crossed the cut path
-                    foreach (var cutConnector in from e in game.Connectors.CurrentItems()
-                                                 let connector = e.Value
-                                                 let endPath1 = new LineSegment(connector.Parent.LastPos, connector.Parent.Pos)
-                                                 let endPath2 = new LineSegment(connector.Child.LastPos, connector.Child.Pos)
-                                                 where cutPath.ApproximateMinDistanceFromPointToLineOverTime(endPath1, endPath2) <= cutTolerance
-                                                 select connector) {
-                        cutConnector.CutPoint = cur.Value;
-                        cutConnector.Child.Life.EndLifetime();
+                    foreach (var cut in from e in game.Connectors.CurrentItems()
+                                        let connector = e.Value
+                                        let endPath1 = new LineSegment(connector.Parent.LastPos, connector.Parent.Pos)
+                                        let endPath2 = new LineSegment(connector.Child.LastPos, connector.Child.Pos)
+                                        let pt = cutPath.TryGetCut(endPath1, endPath2)
+                                        where pt != null
+                                        select new { pt, connector} ) {
+                        cut.connector.CutPoint = cut.pt.Item1;
+                        cut.connector.CutDir = cut.pt.Item2.Normal();
+                        cut.connector.Child.Life.EndLifetime();
                     }
                 },
                 game.Life);
