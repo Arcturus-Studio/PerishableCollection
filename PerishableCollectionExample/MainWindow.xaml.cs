@@ -15,7 +15,6 @@ namespace SnipSnap {
         public MainWindow() {
             InitializeComponent();
 
-            
             var gameLifeExchanger = new LifetimeExchanger();
 
             // show initial practice game

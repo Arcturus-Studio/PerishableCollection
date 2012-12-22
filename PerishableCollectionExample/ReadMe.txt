@@ -1,6 +1,6 @@
 ﻿This game is architected entirely around the idea of using lifetimes.
 Whether or not that's a good idea, or a good example... I dunno.
-At least it's not as boring as the other example project.
+At least it's not as boring as an example project.
 
 Basic overview of the architecture:
 
