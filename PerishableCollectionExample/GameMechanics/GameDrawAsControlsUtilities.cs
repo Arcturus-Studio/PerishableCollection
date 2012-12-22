@@ -66,7 +66,7 @@ namespace SnipSnap {
                                                          TimeSpan propagateBangDuration,
                                                          double propagateBangRotationsPerSecond,
                                                          double propagateBangMaxRadius) {
-            game.Connectors.AsObservable().Subscribe(
+            game.Connectors.CurrentAndFutureItems().Subscribe(
                 e => {
                     // create a line control to visually represent the line
                     var con = e.Value;
@@ -127,7 +127,7 @@ namespace SnipSnap {
 
         ///<summary>Handles making ellipse controls for each ball in the game, as while as showing their death animations.</summary>
         public static void SetupDrawBallsAsControls(this Game game, PerishableCollection<UIElement> controls, TimeSpan deathFadeOutDuration, double deathFinalRadiusFactor) {
-            game.Balls.AsObservable().Subscribe(
+            game.Balls.CurrentAndFutureItems().Subscribe(
                 e => {
                     // create an ellipse control to visually represent the ball
                     var ball = e.Value;

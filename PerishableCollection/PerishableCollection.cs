@@ -106,7 +106,7 @@ namespace TwistedOak.Collections {
         /// Returns an observable that observes all non-perished items added to the collection, now and in the future.
         /// Items may perish while being observed.
         /// </summary>
-        public IObservable<Perishable<T>> AsObservable() {
+        public IObservable<Perishable<T>> CurrentAndFutureItems() {
             return new AnonymousObservable<Perishable<T>>(observer => {
                 var d = new DisposableLifetime();
                 EnumerateAndObserve(observer.OnNext, d.Lifetime);

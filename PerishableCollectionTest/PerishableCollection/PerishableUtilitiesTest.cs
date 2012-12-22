@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TwistedOak.Collections;
 using TwistedOak.Util;
@@ -16,7 +14,7 @@ public class PerishableUtilitiesTest {
         var p1 = new Perishable<int>(1, source.Lifetime);
         var p2 = new Perishable<int>(1, Lifetime.Immortal);
         var p = new PerishableCollection<int>();
-        var q = p.AsObservable().ToPerishableCollection();
+        var q = p.CurrentAndFutureItems().ToPerishableCollection();
         q.CurrentItems().AssertSequenceEquals();
 
         p.Add(p1);

@@ -8,7 +8,7 @@ using TwistedOak.Util;
 [TestClass]
 public class PerishableCollectionTest {
     [TestMethod]
-    public void IsEnumerable() {
+    public void CurrentItems() {
         var source = new LifetimeSource();
         var p1 = new Perishable<int>(1, source.Lifetime);
         var p2 = new Perishable<int>(1, Lifetime.Immortal);
@@ -25,14 +25,14 @@ public class PerishableCollectionTest {
         p.CurrentItems().AssertSequenceEquals(p2);
     }
     [TestMethod]
-    public void IsObservable() {
+    public void CurrentAndFutureItems() {
         var source = new LifetimeSource();
         var p1 = new Perishable<int>(1, source.Lifetime);
         var p2 = new Perishable<int>(1, Lifetime.Immortal);
         var p = new PerishableCollection<int>();
         
         var li0 = new List<Perishable<int>>();
-        p.AsObservable().Subscribe(e => {
+        p.CurrentAndFutureItems().Subscribe(e => {
             li0.Add(e);
             e.Lifetime.WhenDead(() => li0.Remove(e));
         });
@@ -42,7 +42,7 @@ public class PerishableCollectionTest {
         li0.AssertSequenceEquals(p1);
         
         var li1 = new List<Perishable<int>>();
-        p.AsObservable().Subscribe(e => {
+        p.CurrentAndFutureItems().Subscribe(e => {
             li1.Add(e);
             e.Lifetime.WhenDead(() => li1.Remove(e));
         });
@@ -90,7 +90,7 @@ public class PerishableCollectionTest {
             var p = new PerishableCollection<int>();
             var queues = Enumerable.Range(0, 4).Select(e => new Queue<LifetimeSource>()).ToArray();
             var li = new List<int>();
-            p.AsObservable().Subscribe(
+            p.CurrentAndFutureItems().Subscribe(
                 e => {
                     lock (li) li.Add(e.Value);
                     e.Lifetime.WhenDead(() => { lock (li) li.Remove(e.Value); });

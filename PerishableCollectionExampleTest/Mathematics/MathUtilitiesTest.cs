@@ -6,14 +6,6 @@ using SnipSnap.Mathematics;
 [TestClass]
 public class GeometryTest {
     [TestMethod]
-    public void Sign() {
-        0.0.Sign().AssertEquals(0);
-        1.0.Sign().AssertEquals(1);
-        (-1.0).Sign().AssertEquals(-1);
-        2.0.Sign().AssertEquals(1);
-        (-2.0).Sign().AssertEquals(-1);
-    }
-    [TestMethod]
     public void Abs() {
         0.0.Abs().AssertEquals(0);
         1.0.Abs().AssertEquals(1);
@@ -82,17 +74,5 @@ public class GeometryTest {
         
         53489523.0.ProportionToByte().AssertEquals((byte)255);
         (-4234.0).ProportionToByte().AssertEquals((byte)0);
-    }
-
-    [TestMethod]
-    public void CyclePairs() {
-        new[] { 1, 2, 3 }.CyclePairs().AssertSequenceEquals(Tuple.Create(1, 2), Tuple.Create(2, 3), Tuple.Create(3, 1));
-    }
-    [TestMethod]
-    public void CycleLines() {
-        var p1 = new Point(1, 1);
-        var p2 = new Point(2, 2);
-        var p3 = new Point(3, 3);
-        new[] { p1, p2, p3 }.CycleLines().AssertSequenceEquals(p1.To(p2), p2.To(p3), p3.To(p1));
     }
 }

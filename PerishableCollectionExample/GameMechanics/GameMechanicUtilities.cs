@@ -50,7 +50,7 @@ namespace SnipSnap {
 
         ///<summary>Handles periodically adding children to existing balls.</summary>
         public static void SetupPeriodicChildSpawning(this Game game, double expectedPerBallPerSecond, int maxChildrenPerBall, int maxGeneration) {
-            game.Balls.AsObservable().Subscribe(
+            game.Balls.CurrentAndFutureItems().Subscribe(
                 ball => {
                     if (ball.Value.Generation > maxGeneration) return;
                     
@@ -58,7 +58,7 @@ namespace SnipSnap {
                     var curChildCount = 0;
                     var children = new PerishableCollection<Ball>();
                     children
-                        .AsObservable()
+                        .CurrentAndFutureItems()
                         .ObserveNonPerishedCount(completeWhenSourceCompletes: true)
                         .Subscribe(e => curChildCount = e, ball.Lifetime);
                     

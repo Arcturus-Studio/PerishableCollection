@@ -34,7 +34,7 @@ namespace SnipSnap {
         private void SetupAndRunGame(Game game, bool initial) {
             // controls added to this collection should be displayed on the canvas until they perish
             var controls = new PerishableCollection<UIElement>();
-            controls.AsObservable().Subscribe(
+            controls.CurrentAndFutureItems().Subscribe(
                 e => {
                     canvas.Children.Add(e.Value);
                     e.Lifetime.WhenDead(() => canvas.Children.Remove(e.Value));
@@ -197,7 +197,7 @@ namespace SnipSnap {
             }, game.Life);
 
             // track energy changes due to connectors dying
-            game.Connectors.AsObservable().Subscribe(e => e.Lifetime.WhenDead(() => {
+            game.Connectors.CurrentAndFutureItems().Subscribe(e => e.Lifetime.WhenDead(() => {
                 // breaking connectors gain you some energy
                 if (living.Lifetime.IsMortal) 
                     energy += energyGainPerConnectorBroken;
