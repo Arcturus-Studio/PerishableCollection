@@ -81,7 +81,6 @@
     <Compile Include="GameMechanics\GameUtilities.cs" />
     <Compile Include="GameMechanics\Game.cs" />
     <Compile Include="GameMechanics\GameStep.cs" />
-    <Compile Include="Mathematics\ConvexPolygon.cs" />
     <Compile Include="Mathematics\MathUtilities.cs" />
     <Compile Include="Mathematics\LineSegment.cs" />
     <Compile Include="MainWindow.xaml.cs">

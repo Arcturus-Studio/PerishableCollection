@@ -8,10 +8,6 @@ using TwistedOak.Util;
 namespace SnipSnap.Mathematics {
     ///<summary>Utility methods for working with numbers and related concepts.</summary>
     public static class MathUtilities {
-        ///<summary>The sign (+1, -1, or 0) of a number.</summary>
-        public static int Sign(this double value) {
-            return Math.Sign(value);
-        }
         ///<summary>The non-negative absolute magnitude of a number.</summary>
         public static double Abs(this double value) {
             return Math.Abs(value);
@@ -60,24 +56,6 @@ namespace SnipSnap.Mathematics {
             return (byte)Math.Floor(proportion * 256).Clamp(0, 255);
         }
 
-        ///<summary>Enumerates the contiguous pairs of items in a sequence as if it were a cycle, meaning (last, first) is one of the pairs).</summary>
-        public static IEnumerable<Tuple<T, T>> CyclePairs<T>(this IEnumerable<T> items) {
-            using (var e = items.GetEnumerator()) {
-                if (!e.MoveNext()) yield break;
-                var first = e.Current;
-                var prev = e.Current;
-                if (!e.MoveNext()) yield break;
-                do {
-                    yield return Tuple.Create(prev, e.Current);
-                    prev = e.Current;
-                } while (e.MoveNext());
-                yield return Tuple.Create(prev, first);
-            }
-        }
-        ///<summary>Enumerates the lines between consecutive points, including the line between the last and first point.</summary>
-        public static IEnumerable<LineSegment> CycleLines(this IEnumerable<Point> items) {
-            return items.CyclePairs().Select(e => new LineSegment(e.Item1, e.Item2));
-        }
         ///<summary>Enumerates the integers in [0, count) in increasing order from 0 to count-1.</summary>
         public static IEnumerable<int> Range(this int count) {
             return Enumerable.Range(0, count);
