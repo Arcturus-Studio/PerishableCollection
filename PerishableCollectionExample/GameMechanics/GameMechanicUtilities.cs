@@ -29,7 +29,7 @@ namespace SnipSnap {
 
             // if the ball's parent dies, kill it after a small delay
             parent.Life.Lifetime
-                .WhenAfterLife(() => game.Delay(TimeSpan.FromMilliseconds(100 + game.Rng.NextDouble() * 100)))
+                .ThenResurrect(() => game.Delay(TimeSpan.FromMilliseconds(100 + game.Rng.NextDouble() * 100)))
                 .WhenDead(ball.Life.EndLifetime);
             
             game.Balls.Add(ball, ball.Life.Lifetime);

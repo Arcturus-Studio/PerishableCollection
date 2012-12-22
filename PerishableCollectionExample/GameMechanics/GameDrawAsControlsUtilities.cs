@@ -112,7 +112,7 @@ namespace SnipSnap {
                             propagateBangMaxRadius));
 
                     // expand and fade out the line control after the connector dies
-                    var controlLife = e.Lifetime.WhenAfterLife(() => game.AnimateWith(
+                    var controlLife = e.Lifetime.ThenResurrect(() => game.AnimateWith(
                         deathFadeDuration,
                         (step, portion, dt) => {
                             lineControl.StrokeThickness = thickness * 1.LerpTo(deathFinalThicknessFactor, portion);
@@ -152,7 +152,7 @@ namespace SnipSnap {
                         e.Lifetime);
 
                     // once ball is dead, expand and fade out the ellipse
-                    var controlLifetime = e.Lifetime.WhenAfterLife(() =>
+                    var controlLifetime = e.Lifetime.ThenResurrect(() =>
                         game.AnimateWith(
                             deathFadeOutDuration,
                             (step, portion, dt) => {

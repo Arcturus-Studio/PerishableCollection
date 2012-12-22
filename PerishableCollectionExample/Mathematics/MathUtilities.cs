@@ -120,11 +120,6 @@ namespace SnipSnap.Mathematics {
             return color.LerpTo(Color.FromArgb(0, color.R, color.G, color.B) , proportion);
         }
 
-        public static Lifetime WhenAfterLife(this Lifetime lifetime, Func<Lifetime> action) {
-            var r = new LifetimeSource();
-            lifetime.WhenDead(() => action().WhenDead(r.EndLifetime));
-            return r.Lifetime;
-        }
         public static Point LerpAcross(this LineSegment line, double proportion) {
             return line.Start + line.Delta*proportion;
         }

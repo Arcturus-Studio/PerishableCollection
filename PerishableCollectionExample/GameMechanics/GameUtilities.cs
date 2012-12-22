@@ -60,5 +60,12 @@ namespace SnipSnap {
                 life.Lifetime);
             return life.Lifetime;
         }
+
+        ///<summary>A lifetime then ends after the lifetime created by a function (triggered when the given lifetime ends) ends.</summary>
+        public static Lifetime ThenResurrect(this Lifetime lifetime, Func<Lifetime> resurrectedLifetimeFunc) {
+            var r = new LifetimeSource();
+            lifetime.WhenDead(() => resurrectedLifetimeFunc().WhenDead(r.EndLifetime));
+            return r.Lifetime;
+        }
     }
 }
