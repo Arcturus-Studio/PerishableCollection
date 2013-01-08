@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Linq;
-using System.Reactive.Subjects;
 using TwistedOak.Util;
 
 namespace TwistedOak.Collections {

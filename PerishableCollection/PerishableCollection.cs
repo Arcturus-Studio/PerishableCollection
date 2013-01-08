@@ -34,14 +34,15 @@ namespace TwistedOak.Collections {
         ///<summary>Adds an item to the collection, removing it when the item perishes.</summary>
         public void Add(Perishable<T> item) {
             // insert at end of linked list
-            Link node;
+            var node = new Link {
+                Item = item, 
+                Next = _root
+            };
             Action<Perishable<T>> onItemDuringInsert;
             lock (_root) {
-                node = _root.Prev.Next = _root.Prev = new Link {
-                    Item = item, 
-                    Prev = _root.Prev, 
-                    Next = _root
-                };
+                node.Prev = _root.Prev;
+                node.Prev.Next = node;
+                _root.Prev = node;
                 onItemDuringInsert = OnItem;
             }
 
