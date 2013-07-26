@@ -51,7 +51,7 @@ namespace TwistedOak.Collections {
         public static IObservable<int> ObserveNonPerishedCount<T>(this IObservable<Perishable<T>> observable, bool completeWhenSourceCompletes) {
             if (observable == null) throw new ArgumentNullException("observable");
             return new AnonymousObservable<int>(observer => {
-                var d = new DisposableLifetime();
+                var exposedDisposable = new DisposableLifetime();
                 var count = 0;
                 var syncRoot = new object();
                 var isSourceComplete = false;
@@ -62,28 +62,28 @@ namespace TwistedOak.Collections {
                     }
                 };
                 observable.Subscribe(
-                    e => {
+                    item => {
                         lock (syncRoot) {
                             count += 1;
                             observer.OnNext(count);
                         }
-                        e.Lifetime.WhenDead(
+                        item.Lifetime.WhenDead(
                             () => {
                                 lock (syncRoot) {
                                     // may have finished while acquiring the lock
-                                    if (d.Lifetime.IsDead) return;
+                                    if (exposedDisposable.Lifetime.IsDead) return;
 
                                     count -= 1;
                                     observer.OnNext(count);
                                     tryComplete();
                                 }
                             },
-                            d.Lifetime);
+                            exposedDisposable.Lifetime);
                     },
-                    ex => {
+                    error => {
                         lock (syncRoot) {
-                            d.Dispose();
-                            observer.OnError(ex);
+                            exposedDisposable.Dispose();
+                            observer.OnError(error);
                         }
                     },
                     () => {
@@ -92,8 +92,8 @@ namespace TwistedOak.Collections {
                             tryComplete();
                         }
                     },
-                    d.Lifetime);
-                return d;
+                    exposedDisposable.Lifetime);
+                return exposedDisposable;
             });
         }
     }
