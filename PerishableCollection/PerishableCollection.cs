@@ -72,10 +72,13 @@ namespace TwistedOak.Collections {
             while (true) {
                 // observe current items by enumerating through the linked list
                 while (!subscriptionLifetime.IsDead) {
-                    var n = h.Next;
+                    Link n;
+                    lock (_root) {
+                        n = h.Next;
+                    }
                     if (n == _root) break;
+                    onItem(n.Item);
                     h = n;
-                    onItem(h.Item);
                 }
 
                 // switch to observing by events if no items were inserted during the enumeration
@@ -97,7 +100,9 @@ namespace TwistedOak.Collections {
         public IEnumerable<Perishable<T>> CurrentItems() {
             var h = _root;
             while (true) {
-                h = h.Next;
+                lock (_root) {
+                    h = h.Next;
+                }
                 if (h == _root) break;
                 yield return h.Item;
             }
