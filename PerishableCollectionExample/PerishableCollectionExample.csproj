@@ -118,13 +118,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\PerishableCollection\PerishableCollection.csproj">
       <Project>{7541343d-44b8-49e3-8c2a-0f2618a3b11e}</Project>
       <Name>PerishableCollection</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
