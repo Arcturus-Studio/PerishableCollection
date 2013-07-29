@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TwistedOak.Collections;
 using TwistedOak.Util;
@@ -55,6 +56,21 @@ public class PerishableCollectionTest {
         source.EndLifetime();
         li0.AssertSequenceEquals(p2);
         li1.AssertSequenceEquals(p2);
+    }
+    [TestMethod]
+    public void CurrentAndFutureItems_EndingDuringEnumerationDoesNotLockup() {
+        var s = new LifetimeSource();
+        var p = new PerishableCollection<int>();
+        for (var i = 0; i < 1000; i++) {
+            p.Add(i, Lifetime.Immortal);
+        }
+
+        var t = Task.Factory.StartNew(
+            () => p.CurrentAndFutureItems().Subscribe(
+                item => s.EndLifetime(),
+                s.Lifetime));
+        t.Wait(TimeSpan.FromMilliseconds(100));
+        t.AssertRanToCompletion();
     }
     [TestMethod]
     public void IsResultThreadSafe() {

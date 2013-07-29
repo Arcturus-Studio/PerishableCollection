@@ -35,7 +35,7 @@ namespace TwistedOak.Collections {
         public void Add(Perishable<T> item) {
             // insert at end of linked list
             var node = new Link {
-                Item = item, 
+                Item = item,
                 Next = _root
             };
             Action<Perishable<T>> onItemDuringInsert;
@@ -56,7 +56,7 @@ namespace TwistedOak.Collections {
             });
 
             // inform any listeners of the new item
-            if (onItemDuringInsert != null) 
+            if (onItemDuringInsert != null)
                 onItemDuringInsert(item);
         }
 
@@ -69,9 +69,9 @@ namespace TwistedOak.Collections {
             if (onItem == null) throw new ArgumentNullException("onItem");
 
             var h = _root;
-            while (true) {
+            while (!subscriptionLifetime.IsDead) {
                 // observe current items by enumerating through the linked list
-                while (!subscriptionLifetime.IsDead) {
+                do {
                     Link n;
                     lock (_root) {
                         n = h.Next;
@@ -79,7 +79,7 @@ namespace TwistedOak.Collections {
                     if (n == _root) break;
                     onItem(n.Item);
                     h = n;
-                }
+                } while (!subscriptionLifetime.IsDead);
 
                 // switch to observing by events if no items were inserted during the enumeration
                 lock (_root) {
