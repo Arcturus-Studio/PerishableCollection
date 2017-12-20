@@ -12,7 +12,7 @@ namespace TwistedOak.Collections {
         public static PerishableCollection<T> ToPerishableCollection<T>(this IObservable<Perishable<T>> observable, Lifetime lifetime = default(Lifetime)) {
             if (observable == null) throw new ArgumentNullException(nameof(observable));
             var result = new PerishableCollection<T>();
-            observable.Subscribe(result.Add);
+            observable.Subscribe(result.Add, lifetime);
             return result;
         }
 

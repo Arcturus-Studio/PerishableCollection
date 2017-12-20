@@ -27,6 +27,29 @@ public class PerishableUtilitiesTest {
         q.CurrentItems().AssertSequenceEquals(p2);
     }
     [TestMethod]
+    public void ToPerishableCollectionWithLifetime() {
+        var source = new LifetimeSource();
+        var collectionSource = new LifetimeSource();
+        var p1 = new Perishable<int>(1, source.Lifetime);
+        var p2 = new Perishable<int>(1, Lifetime.Immortal);
+        var p = new PerishableCollection<int>();
+        var q = p.CurrentAndFutureItems().ToPerishableCollection(collectionSource.Lifetime);
+        q.CurrentItems().AssertSequenceEquals();
+
+        p.Add(p1);
+        q.CurrentItems().AssertSequenceEquals(p1);
+
+        collectionSource.EndLifetime();
+
+        p.Add(p2.Value, p2.Lifetime);
+        q.CurrentItems().AssertSequenceEquals(p1);
+
+        source.EndLifetime();
+
+        source.EndLifetime();
+        q.CurrentItems().AssertSequenceEquals();
+    }
+    [TestMethod]
     public void PerishableObservableSelect() {
         new[] { new Perishable<int>(1, Lifetime.Immortal) }
             .ToObservable()
