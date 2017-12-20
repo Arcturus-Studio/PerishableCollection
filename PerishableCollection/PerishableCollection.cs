@@ -22,14 +22,12 @@ namespace TwistedOak.Collections {
 
         ///<summary>Creates a new empty perishable collection.</summary>
         public PerishableCollection() {
-            this._root = new Link();
+            _root = new Link();
             _root.Next = _root.Prev = _root;
         }
 
         ///<summary>Adds an item to the collection, removing it when the given lifetime ends.</summary>
-        public void Add(T item, Lifetime lifetime) {
-            Add(new Perishable<T>(item, lifetime));
-        }
+        public void Add(T item, Lifetime lifetime) => Add(new Perishable<T>(item, lifetime));
 
         ///<summary>Adds an item to the collection, removing it when the item perishes.</summary>
         public void Add(Perishable<T> item) {
@@ -56,8 +54,7 @@ namespace TwistedOak.Collections {
             });
 
             // inform any listeners of the new item
-            if (onItemDuringInsert != null) 
-                onItemDuringInsert(item);
+            onItemDuringInsert?.Invoke(item);
         }
 
         /// <summary>
